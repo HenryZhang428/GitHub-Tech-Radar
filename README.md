@@ -6,6 +6,7 @@
 ![Python](https://img.shields.io/badge/python-3.10+-green.svg)
 ![Platform](https://img.shields.io/badge/platform-macOS-lightgrey.svg)
 ![AI](https://img.shields.io/badge/AI-Ollama%20Local-purple.svg)
+![LLM Ready](https://img.shields.io/badge/LLM-Ready-black.svg)
 
 ## 📖 项目介绍
 

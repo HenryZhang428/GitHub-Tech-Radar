@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: "Zhang"
+    given-names: "Henry"
+    alias: "HenryZhang428"
+title: "GitHub Tech Radar: AI-Powered Daily Intelligence Briefing"
+version: 0.2.0
+date-released: 2026-01-28
+url: "https://github.com/HenryZhang428/GitHub-Tech-Radar"
+license: "MIT"
+keywords:
+  - "github"
+  - "ai"
+  - "ollama"
+  - "trend-analysis"
+  - "developer-tools"
+  - "hidden-gems"
