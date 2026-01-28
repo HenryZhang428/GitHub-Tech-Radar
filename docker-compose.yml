@@ -1,0 +1,25 @@
+services:
+  web:
+    build: .
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./data:/app/data
+      - ./watchlist.json:/app/watchlist.json
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+    restart: always
+    command: python src/web_server.py
+
+  worker:
+    build: .
+    volumes:
+      - ./data:/app/data
+      - ./watchlist.json:/app/watchlist.json
+      - ./archives:/app/archives
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+    restart: always
+    command: python src/service.py
