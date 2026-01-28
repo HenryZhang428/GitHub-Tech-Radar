@@ -136,6 +136,40 @@ class LLMAnalyzer:
             logger.error(f"Query expansion failed: {e}")
             return query
 
+    def analyze_potential(self, name, description, language):
+        """
+        Analyze if a repo is a "Hidden Gem" (High potential, innovative, but low stars).
+        """
+        if not self.client:
+            return "Potential hidden gem."
+
+        prompt = f"""
+        Analyze this small GitHub project to see if it's a "Hidden Gem" (innovative/useful but underrated).
+        
+        Repo: {name}
+        Language: {language}
+        Description: {description}
+        
+        Output a short, punchy sentence (in Chinese) explaining WHY it's unique or valuable. 
+        Start with "💎 发现亮点: "
+        If it seems generic/useless, just say "普通项目".
+        """
+
+        try:
+            response = self.client.chat.completions.create(
+                model=self.model,
+                messages=[
+                    {"role": "system", "content": "You are a tech scout looking for hidden gems."},
+                    {"role": "user", "content": prompt}
+                ],
+                max_tokens=100,
+                temperature=0.5
+            )
+            return response.choices[0].message.content.strip()
+        except Exception as e:
+            logger.error(f"Potential analysis failed: {e}")
+            return "💎 发现亮点: 潜力项目 (AI暂不可用)"
+
     def _fallback_analysis(self, name, description, language):
         """
         Fallback when LLM is not available.

@@ -113,7 +113,23 @@ def unfollow_user():
     
     return jsonify({"status": "info", "message": f"Not following {username}"})
 
-from scraper import search_repos
+from scraper import search_repos, search_hidden_gems
+
+@app.route('/api/hidden-gems')
+def get_hidden_gems():
+    # 1. Fetch raw gems
+    gems = search_hidden_gems(limit=6) # 6 is a good number for grid
+    
+    # 2. Analyze with LLM to find "Why it is a gem"
+    for gem in gems:
+        # Simple analysis
+        gem['gem_analysis'] = cache_manager.llm_analyzer.analyze_potential(
+            gem['name'], 
+            gem['description'] or '', 
+            gem['language'] or 'Unknown'
+        )
+        
+    return jsonify(gems)
 
 @app.route('/api/search', methods=['POST'])
 def search():

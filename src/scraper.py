@@ -101,3 +101,47 @@ def search_repos(query, limit=10):
     except requests.exceptions.RequestException as e:
         logger.error(f"Error searching GitHub: {e}")
         return []
+
+def search_hidden_gems(limit=10):
+    """
+    Find "Hidden Gems": High-quality repositories with low to moderate stars.
+    Criteria:
+    - Stars: 50 - 2000 (Not too famous, not too obscure)
+    - Updated: Within last 7 days (Active)
+    - Pushed: Within last 7 days
+    - Size: < 50000 KB (Not huge monoliths)
+    - Topics: creative, indie, tool, utility, automation (keywords to find useful tools)
+    """
+    url = "https://api.github.com/search/repositories"
+    
+    # Calculate date 7 days ago
+    last_week = (datetime.now() - timedelta(days=7)).strftime('%Y-%m-%d')
+    
+    # Query for hidden gems
+    # We mix some topics to find interesting "small tools"
+    query = f"stars:50..2000 pushed:>{last_week} fork:false size:<50000"
+    
+    params = {
+        "q": query,
+        "sort": "updated", # Sort by recently updated to get fresh gems
+        "order": "desc",
+        "per_page": limit
+    }
+    
+    headers = {
+        "Accept": "application/vnd.github.v3+json"
+    }
+    
+    token = os.getenv("GITHUB_TOKEN")
+    if token:
+        headers["Authorization"] = f"token {token}"
+
+    try:
+        logger.info(f"Searching for hidden gems: {query}")
+        response = requests.get(url, params=params, headers=headers)
+        response.raise_for_status()
+        data = response.json()
+        return data.get("items", [])
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Error searching hidden gems: {e}")
+        return []
