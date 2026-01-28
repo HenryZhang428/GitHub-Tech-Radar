@@ -369,6 +369,12 @@
 
         <!-- Discovery Section (Hidden by default) -->
         <div id="gurus-section" style="display: none; margin-bottom: 50px;">
+            <h2 class="section-title">💎 Hidden Gems & Rising Stars</h2>
+            <div id="hidden-gems-container" class="repo-list" style="margin-bottom: 40px;">
+                <!-- Loaded via JS -->
+                <div class="empty-state">Mining for gems...</div>
+            </div>
+
             <h2 class="section-title">🚀 Discover Gurus</h2>
             {% for category, items in gurus.items() %}
             <h3 class="category-title">{{ category }}</h3>
@@ -586,8 +592,48 @@
                 section.style.display = 'block';
                 // Scroll to section
                 section.scrollIntoView({ behavior: 'smooth' });
+                
+                // Load Hidden Gems if empty
+                const container = document.getElementById('hidden-gems-container');
+                if (container.innerText.includes('Mining')) {
+                    loadHiddenGems();
+                }
             } else {
                 section.style.display = 'none';
+            }
+        }
+        
+        async function loadHiddenGems() {
+            const container = document.getElementById('hidden-gems-container');
+            try {
+                const response = await fetch('/api/hidden-gems');
+                const gems = await response.json();
+                
+                if (!gems || gems.length === 0) {
+                    container.innerHTML = '<div class="empty-state">No gems found today. The mines are empty.</div>';
+                    return;
+                }
+                
+                container.innerHTML = gems.map(repo => `
+                    <div class="repo-card" style="border-color: #ff00ff; box-shadow: 0 0 10px rgba(255, 0, 255, 0.1);">
+                        <div class="repo-header">
+                            <div class="repo-name" style="color: #ff00ff;">${repo.name}</div>
+                            <div class="repo-description">${repo.description || 'No description available'}</div>
+                        </div>
+                        <div class="repo-stats">
+                            <div class="stars">⭐ ${repo.stargazers_count}</div>
+                            <div class="language" style="color: #ff00ff;">&lt;${repo.language || 'Unknown'}&gt;</div>
+                        </div>
+                        <div class="ai-analysis" style="border-left-color: #ff00ff; background: rgba(255, 0, 255, 0.05);">
+                            <h4 style="color: #ff00ff;">💎 Gem Analysis</h4>
+                            <p>${repo.gem_analysis || 'Analyzing potential...'}</p>
+                        </div>
+                    </div>
+                `).join('');
+                
+            } catch (e) {
+                console.error("Failed to load gems", e);
+                container.innerHTML = '<div class="empty-state">Mining accident. System failure.</div>';
             }
         }
 
