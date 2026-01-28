@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Tech Radar - 2026-01-28</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            color: #ffffff;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px 0;
+            border-bottom: 2px solid #00ffff;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #00ffff, #0080ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #b0b0b0;
+        }
+        
+        .last-updated {
+            font-size: 0.9rem;
+            color: #00ffff;
+            margin-top: 5px;
+            font-family: monospace;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: #00ffff;
+            margin: 40px 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: '';
+            display: block;
+            width: 5px;
+            height: 30px;
+            background: #00ffff;
+            box-shadow: 0 0 10px #00ffff;
+        }
+
+        .repo-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .repo-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .repo-card:hover {
+            transform: translateY(-5px);
+            border-color: #00ffff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .repo-header {
+            margin-bottom: 15px;
+        }
+
+        .repo-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #00ffff;
+            margin-bottom: 5px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .repo-description {
+            font-size: 0.95rem;
+            color: #b0b0b0;
+            margin-bottom: 15px;
+            min-height: 40px;
+        }
+
+        .repo-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .stars {
+            color: #ffd700;
+            font-weight: 600;
+        }
+
+        .language {
+            color: #00ff88;
+            font-family: monospace;
+        }
+
+        .ai-analysis {
+            background: rgba(0, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 3px solid #00ff88;
+        }
+
+        .ai-analysis h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #00ff88;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .ai-analysis p {
+            font-size: 0.9rem;
+            color: #d0d0d0;
+            line-height: 1.5;
+        }
+
+        .vip-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .vip-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 200, 0, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s;
+        }
+        
+        .vip-card:hover {
+            border-color: #ffc800;
+            box-shadow: 0 0 15px rgba(255, 200, 0, 0.2);
+        }
+
+        .vip-icon {
+            font-size: 1.5rem;
+        }
+        
+        .vip-content {
+            flex: 1;
+        }
+
+        .vip-user {
+            color: #ffc800;
+            font-weight: bold;
+        }
+        
+        .vip-action {
+            color: #b0b0b0;
+        }
+        
+        .vip-repo {
+            color: #00ffff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px 0;
+            border-top: 2px solid #00ffff;
+            color: #505050;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* Glitch Effect for Title */
+        .glitch {
+            position: relative;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #505050;
+            border: 1px dashed #505050;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="glitch">GitHub Tech Radar</h1>
+            <p class="subtitle">AI-Powered Daily Intelligence Briefing</p>
+            <p class="last-updated">System Status: ONLINE | Last Sync: 2026-01-28 12:09:13</p>
+        </header>
+
+        <h2 class="section-title">🔥 Global Trending Protocols</h2>
+        <div class="repo-list">
+            
+            <div class="repo-card" onclick="window.open('https://github.com/zarazhangrui/frontend-slides', '_blank')">
+                <div class="repo-header">
+                    <div class="repo-name">frontend-slides</div>
+                    <div class="repo-description">Create beautiful slides on the web using Claude's frontend skills</div>
+                </div>
+                <div class="repo-stats">
+                    <div class="stars">⭐ 8</div>
+                    <div class="language">&lt;Unknown&gt;</div>
+                </div>
+                <div class="ai-analysis">
+                    <h4>AI Insight</h4>
+                    <p>**前端幻灯片工具**
+
+该项目旨在提供一个简单而易用的前端幻灯片创建工具，利用Claude的 frontend 绘画能力。它允许用户快速生成高质量的幻灯片，可以用于多种场景，如演讲、会议和教育。
+
+该工具对开发者和非开发者都非常有用，因为它简化了幻灯片的设计过程，并提供了一种快速有效的方法来呈现信息。</p>
+                </div>
+            </div>
+            
+            <div class="repo-card" onclick="window.open('https://github.com/matthewlam721/octopus-parallel', '_blank')">
+                <div class="repo-header">
+                    <div class="repo-name">octopus-parallel</div>
+                    <div class="repo-description">Pre-balanced GPU workload distribution inspired by octopus neural coordination. Achieves up to 14.84x speedup on imbalanced parallel tasks.</div>
+                </div>
+                <div class="repo-stats">
+                    <div class="stars">⭐ 7</div>
+                    <div class="language">&lt;Python&gt;</div>
+                </div>
+                <div class="ai-analysis">
+                    <h4>AI Insight</h4>
+                    <p>octopus-parallel是一项Python开源项目，旨在模仿海绵虫神经协调的预平衡GPU负载分配。这种方法可以实现对不均衡并行任务的14.84倍速度up.它利用了海绵虫的神经协调原理，引入了一种自适应的负载分配机制，可以显著提高 GPU 提算效率。该项目可用于大规模数据处理和科学计算应用中，尤其是对并行任务的性能优化。</p>
+                </div>
+            </div>
+            
+            <div class="repo-card" onclick="window.open('https://github.com/sibinesh2k5-commits/Ai-resume-builder', '_blank')">
+                <div class="repo-header">
+                    <div class="repo-name">Ai-resume-builder</div>
+                    <div class="repo-description">No description available</div>
+                </div>
+                <div class="repo-stats">
+                    <div class="stars">⭐ 6</div>
+                    <div class="language">&lt;Unknown&gt;</div>
+                </div>
+                <div class="ai-analysis">
+                    <h4>AI Insight</h4>
+                    <p>Ai-resume-builder  是一个基于 AI 的简历生成工具。它可以根据使用者提供的信息，自动生成专业和吸引人力的简历。这个工具的出现有助于简化简历制作流程并降低了创作简历的难度。该工具对学生、求职者以及职业发展中的个人来说都很有用，因为它可以帮助他们快速、高效地制定出一个高质量的简历。</p>
+                </div>
+            </div>
+            
+            <div class="repo-card" onclick="window.open('https://github.com/sydney-client/Phobos', '_blank')">
+                <div class="repo-header">
+                    <div class="repo-name">Phobos</div>
+                    <div class="repo-description">Cracked version of the 1.21.1 Phobos Minecraft utility mod</div>
+                </div>
+                <div class="repo-stats">
+                    <div class="stars">⭐ 5</div>
+                    <div class="language">&lt;Java&gt;</div>
+                </div>
+                <div class="ai-analysis">
+                    <h4>AI Insight</h4>
+                    <p>该 Phobos 项目是一个 Java 语言的开源工具库。
+
+
+这是一个用于增强 Minecraft 的功能，特别是可视化、调试和优化的工具。
+因为它提供了一个简洁直观的GUI，可以方便地查看和控制 Minecraft 游戏环境中的数据，所以非常有用。
+该项目主要针对 MinecraftModding 和 Java 开发者。</p>
+                </div>
+            </div>
+            
+            <div class="repo-card" onclick="window.open('https://github.com/zhangyiji17/Annotation-tools', '_blank')">
+                <div class="repo-header">
+                    <div class="repo-name">Annotation-tools</div>
+                    <div class="repo-description">No description available</div>
+                </div>
+                <div class="repo-stats">
+                    <div class="stars">⭐ 5</div>
+                    <div class="language">&lt;Python&gt;</div>
+                </div>
+                <div class="ai-analysis">
+                    <h4>AI Insight</h4>
+                    <p>「标注工具」（Annotation-tools）是开发用于Python的开源项目，旨在为数据标记和处理提供易用界面。它为用户提供了一个简单而有效的方法来创建、管理和合并标签，这对于各类型的数据标记任务非常有用。这种工具可以帮助数据分析师和科学家高效地标记数据，从而加速数据处理和模型训练。该项目是适用于数据标记领域的有用的工具，能够提高工作效率。</p>
+                </div>
+            </div>
+            
+            <div class="repo-card" onclick="window.open('https://github.com/OmarAI2003/riscv-coding-challenge', '_blank')">
+                <div class="repo-header">
+                    <div class="repo-name">riscv-coding-challenge</div>
+                    <div class="repo-description">Code challenge: Extracting RISC-V architectural parameters with llms</div>
+                </div>
+                <div class="repo-stats">
+                    <div class="stars">⭐ 4</div>
+                    <div class="language">&lt;Python&gt;</div>
+                </div>
+                <div class="ai-analysis">
+                    <h4>AI Insight</h4>
+                    <p>"了解RISC-V架构参数的Python编程挑战"
+
+这个项目提供了一个Python编程挑战，要求开发者使用LLM（Large Language Model）对RISC-V架构进行分析，提取其相关参数。该项目具有挑战性和互动性，可以通过LLM模型预测出目标参数，使研究人员或学生能够使用实用工具来了解和优化RISC-V处理器的性能。
+
+该项目对于学习者、研究人员和硬件工程师来说都是有价值的，特别是那些感兴趣于并发编程、系统调度或计算机架构的人。</p>
+                </div>
+            </div>
+            
+            <div class="repo-card" onclick="window.open('https://github.com/Nexar-Bit/Nexar-Bit', '_blank')">
+                <div class="repo-header">
+                    <div class="repo-name">Nexar-Bit</div>
+                    <div class="repo-description">No description available</div>
+                </div>
+                <div class="repo-stats">
+                    <div class="stars">⭐ 4</div>
+                    <div class="language">&lt;Unknown&gt;</div>
+                </div>
+                <div class="ai-analysis">
+                    <h4>AI Insight</h4>
+                    <p>Nexar-Bit是一個無法幫助我分析的github repository。它沒有指定語言或描述。因此，我無法提供任何有用的資訊。
+
+如果您有任何其他Repository，或者需要更具體的幫助，请告訴我。</p>
+                </div>
+            </div>
+            
+            <div class="repo-card" onclick="window.open('https://github.com/Asura-lab/EYSH', '_blank')">
+                <div class="repo-header">
+                    <div class="repo-name">EYSH</div>
+                    <div class="repo-description">No description available</div>
+                </div>
+                <div class="repo-stats">
+                    <div class="stars">⭐ 3</div>
+                    <div class="language">&lt;Unknown&gt;</div>
+                </div>
+                <div class="ai-analysis">
+                    <h4>AI Insight</h4>
+                    <p>EYSH 是一個無法描述的 GitHub 存庫。雖然它沒有語言或描述，但它的存在仍令人感覺到對未來技術趨勢的關注。
+
+這個存庫可能是為了探索未來 tech 技術或研究開創性的技術方案。但是，現有的資訊不足以提供明確的答案。任何針對 EYSH 的分析都需要繼續追蹤和學習，以了解它實際上是什麼。
+
+這個存庫可能對那些interested in 未來tech技術或研究開創性的技術方案的人有用，例如 tech enthusiasts、researchers 和 tech investors。</p>
+                </div>
+            </div>
+            
+            <div class="repo-card" onclick="window.open('https://github.com/DuckTapeMan35/duckIRC', '_blank')">
+                <div class="repo-header">
+                    <div class="repo-name">duckIRC</div>
+                    <div class="repo-description">A vim inspired IRC client</div>
+                </div>
+                <div class="repo-stats">
+                    <div class="stars">⭐ 3</div>
+                    <div class="language">&lt;Makefile&gt;</div>
+                </div>
+                <div class="ai-analysis">
+                    <h4>AI Insight</h4>
+                    <p>(簡易 IRC 客戶端)
+
+ 1. 這是一個 vim 簡單化的 IRC 客戶端，允許使用者快速輸入訊息和控制irc行為。
+ 
+2. 這個程式在IRC 行業中具有獨特之處，因為它利用 Makefile 的簡略方式來實現IRC 客戶端的基本功能。
+
+3. 這個程式主要是針對vim 和irc 簡單化使用者，特別是那些喜歡vim 簡單化程式的開發者。</p>
+                </div>
+            </div>
+            
+            <div class="repo-card" onclick="window.open('https://github.com/Salvatore-Als/cs2-chatprocessor', '_blank')">
+                <div class="repo-header">
+                    <div class="repo-name">cs2-chatprocessor</div>
+                    <div class="repo-description">No description available</div>
+                </div>
+                <div class="repo-stats">
+                    <div class="stars">⭐ 3</div>
+                    <div class="language">&lt;C#&gt;</div>
+                </div>
+                <div class="ai-analysis">
+                    <h4>AI Insight</h4>
+                    <p>此项目是C# ChatProcessor的实现，能够接收来自不同协议的实时输入，并将其转换为标准化的格式以便于处理。它对实时通信系统、游戏等领域具有广泛应用价值，是一个简单易用的开源工具，可以帮助开发者快速建立高性能的实时通信系统。
+
+项目主要适合用于实时通信应用程序的开发，例如在线游戏、视频通话等。</p>
+                </div>
+            </div>
+            
+        </div>
+
+        <h2 class="section-title">👀 High-Value Target Activity (VIP)</h2>
+        <div class="vip-list">
+            
+                <div class="empty-state">
+                    No recent activity detected from watchlist targets.
+                </div>
+            
+        </div>
+
+        <footer>
+            <p>Generated by GitHub Daily Promption System v2.0</p>
+        </footer>
+    </div>
+</body>
+</html>

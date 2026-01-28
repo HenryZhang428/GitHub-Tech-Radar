@@ -1,0 +1,70 @@
+{
+  "AI & ML": [
+    {
+      "name": "karpathy",
+      "fullname": "Andrej Karpathy",
+      "desc": "Former Director of AI at Tesla, OpenAI founding member.",
+      "avatar": "https://avatars.githubusercontent.com/u/241138?v=4"
+    },
+    {
+      "name": "geohot",
+      "fullname": "George Hotz",
+      "desc": "Founder of comma.ai, famous hacker.",
+      "avatar": "https://avatars.githubusercontent.com/u/72895?v=4"
+    },
+    {
+      "name": "ggerganov",
+      "fullname": "Georgi Gerganov",
+      "desc": "Creator of llama.cpp and whisper.cpp.",
+      "avatar": "https://avatars.githubusercontent.com/u/1991296?v=4"
+    }
+  ],
+  "Frontend & Web": [
+    {
+      "name": "yyx990803",
+      "fullname": "Evan You",
+      "desc": "Creator of Vue.js and Vite.",
+      "avatar": "https://avatars.githubusercontent.com/u/499550?v=4"
+    },
+    {
+      "name": "gaearon",
+      "fullname": "Dan Abramov",
+      "desc": "Co-author of Redux and Create React App.",
+      "avatar": "https://avatars.githubusercontent.com/u/810438?v=4"
+    },
+    {
+      "name": "Rich-Harris",
+      "fullname": "Rich Harris",
+      "desc": "Creator of Svelte and Rollup.",
+      "avatar": "https://avatars.githubusercontent.com/u/1162160?v=4"
+    }
+  ],
+  "System & Backend": [
+    {
+      "name": "torvalds",
+      "fullname": "Linus Torvalds",
+      "desc": "Creator of Linux and Git.",
+      "avatar": "https://avatars.githubusercontent.com/u/1024025?v=4"
+    },
+    {
+      "name": "antirez",
+      "fullname": "Salvatore Sanfilippo",
+      "desc": "Creator of Redis.",
+      "avatar": "https://avatars.githubusercontent.com/u/65633?v=4"
+    },
+    {
+      "name": "kennethreitz",
+      "fullname": "Kenneth Reitz",
+      "desc": "Creator of Requests for Python.",
+      "avatar": "https://avatars.githubusercontent.com/u/119893?v=4"
+    }
+  ],
+  "Security & Hacking": [
+    {
+      "name": "samyk",
+      "fullname": "Samy Kamkar",
+      "desc": "Security researcher, creator of the MySpace worm.",
+      "avatar": "https://avatars.githubusercontent.com/u/178163?v=4"
+    }
+  ]
+}

@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub 每周热榜推荐</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px 0;
+            border-bottom: 2px solid #00ffff;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #00ffff, #0080ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #b0b0b0;
+        }
+
+        .filter-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        select {
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #00ffff;
+            color: #ffffff;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        select:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #00ff88;
+        }
+
+        select option {
+            background: #1a1f3a;
+            color: #ffffff;
+        }
+
+        .refresh-btn {
+            padding: 10px 15px;
+            background: rgba(0, 255, 255, 0.2);
+            border: 1px solid #00ffff;
+            color: #00ffff;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .refresh-btn:hover {
+            background: rgba(0, 255, 255, 0.3);
+            border-color: #00ff88;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        .repo-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .repo-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+        }
+
+        .repo-card:hover {
+            transform: translateY(-5px);
+            border-color: #00ffff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+
+        .repo-header {
+            margin-bottom: 15px;
+        }
+
+        .repo-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #00ffff;
+            margin-bottom: 5px;
+        }
+
+        .repo-description {
+            font-size: 0.95rem;
+            color: #b0b0b0;
+            margin-bottom: 15px;
+            min-height: 60px;
+        }
+
+        .repo-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .stars {
+            color: #ffd700;
+            font-weight: 600;
+        }
+
+        .language {
+            color: #00ff88;
+        }
+
+        .loading {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #00ffff;
+            padding: 50px;
+        }
+
+        .error {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #ff4444;
+            padding: 50px;
+        }
+
+        .ai-analysis {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(0, 255, 255, 0.2);
+        }
+
+        .ai-analysis h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #00ff88;
+            margin-bottom: 5px;
+        }
+
+        .ai-analysis p {
+            font-size: 0.9rem;
+            color: #b0b0b0;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px 0;
+            border-top: 2px solid #00ffff;
+            color: #b0b0b0;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .repo-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>GitHub 每周热榜推荐</h1>
+            <p class="subtitle">发现最热门的开源项目</p>
+        </header>
+
+        <div class="filter-container">
+            <select id="timeRange">
+                <option value="daily">今日热榜</option>
+                <option value="weekly" selected>本周热榜</option>
+                <option value="monthly">本月热榜</option>
+            </select>
+            
+            <select id="language">
+                <option value="">所有语言</option>
+                <option value="javascript">JavaScript</option>
+                <option value="python">Python</option>
+                <option value="java">Java</option>
+                <option value="typescript">TypeScript</option>
+                <option value="go">Go</option>
+                <option value="rust">Rust</option>
+                <option value="cpp">C++</option>
+                <option value="csharp">C#</option>
+                <option value="php">PHP</option>
+                <option value="ruby">Ruby</option>
+            </select>
+            
+            <select id="translateLanguage">
+                <option value="zh-CN" selected>中文</option>
+                <option value="en">英文</option>
+                <option value="ja">日文</option>
+                <option value="ko">韩文</option>
+                <option value="fr">法文</option>
+                <option value="de">德文</option>
+            </select>
+            
+            <button id="refreshBtn" class="refresh-btn">刷新</button>
+        </div>
+
+        <div id="repoList" class="repo-list">
+            <div class="loading">加载中...</div>
+        </div>
+
+        <footer>
+            <p>数据来源：GitHub Trending API</p>
+        </footer>
+    </div>
+
+    <script>
+        const repoList = document.getElementById('repoList');
+        const timeRange = document.getElementById('timeRange');
+        const language = document.getElementById('language');
+        const translateLanguage = document.getElementById('translateLanguage');
+
+        async function fetchRepos() {
+            repoList.innerHTML = '<div class="loading">加载中...</div>';
+            
+            try {
+                // 计算日期范围
+                const sinceDate = getSinceDate(timeRange.value);
+                
+                // 构建搜索查询
+                let query = `created:>${sinceDate}`;
+                if (language.value) {
+                    query += ` language:${language.value}`;
+                }
+                
+                // 使用GitHub搜索API获取热门项目
+                const response = await fetch(`https://api.github.com/search/repositories?q=${encodeURIComponent(query)}&sort=stars&order=desc&per_page=30`);
+                const data = await response.json();
+                
+                if (data.items.length === 0) {
+                    repoList.innerHTML = '<div class="error">没有找到符合条件的项目</div>';
+                    return;
+                }
+                
+                // 为每个项目添加翻译和AI批注
+                const reposWithDetails = await Promise.all(data.items.map(async repo => {
+                    const translatedDesc = await translateText(repo.description || '无描述', translateLanguage.value);
+                    const aiAnalysis = await generateAIAnalysis(repo.description || '无描述', repo.name, repo.language);
+                    
+                    return {
+                        ...repo,
+                        translatedDescription: translatedDesc,
+                        aiAnalysis: aiAnalysis
+                    };
+                }));
+                
+                repoList.innerHTML = reposWithDetails.map(repo => `
+                    <div class="repo-card" onclick="window.open('${repo.html_url}', '_blank')">
+                        <div class="repo-header">
+                            <div class="repo-name">${repo.name}</div>
+                            <div class="repo-description">${repo.translatedDescription || '无描述'}</div>
+                        </div>
+                        <div class="repo-stats">
+                            <div class="stars">⭐ ${repo.stargazers_count.toLocaleString()}</div>
+                            <div class="language">${repo.language || '未知'}</div>
+                        </div>
+                        <div class="ai-analysis">
+                            <h4>AI分析</h4>
+                            <p>${repo.aiAnalysis}</p>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                repoList.innerHTML = '<div class="error">加载失败，请稍后重试</div>';
+                console.error('Error fetching repos:', error);
+            }
+        }
+
+        function getSinceDate(timeRange) {
+            const date = new Date();
+            
+            switch (timeRange) {
+                case 'daily':
+                    date.setDate(date.getDate() - 1);
+                    break;
+                case 'weekly':
+                    date.setDate(date.getDate() - 7);
+                    break;
+                case 'monthly':
+                    date.setMonth(date.getMonth() - 1);
+                    break;
+            }
+            
+            return date.toISOString().split('T')[0];
+        }
+
+        async function translateText(text, targetLanguage) {
+            // 简单的翻译模拟，实际项目中可以使用翻译API
+            if (targetLanguage === 'zh-CN') {
+                return text; // 假设已经是中文
+            }
+            return text; // 简单返回原文本
+        }
+
+        async function generateAIAnalysis(description, name, language) {
+            // 改进的AI分析，根据项目描述和语言提供更准确的解释
+            if (!description) {
+                return `这是一个名为${name}的开源项目。虽然没有详细描述，但它已经获得了很多开发者的关注。你可以点击卡片查看更多详细信息。`;
+            }
+            
+            // 根据关键词进行分类
+            if (description.includes('AI') || description.includes('machine learning') || description.includes('ML') || description.includes('neural network')) {
+                return `这是一个人工智能项目，名为${name}。它可能用于训练模型、处理数据或进行预测分析。简单来说，就是让计算机能够像人一样学习和解决问题。`;
+            } else if (description.includes('web') || description.includes('website') || description.includes('server') || description.includes('client')) {
+                return `这是一个网页开发项目，名为${name}。它可能用于创建网站、网页应用或提供网页服务。简单来说，就是让你能够在浏览器中访问和使用的应用程序。`;
+            } else if (description.includes('game') || description.includes('gaming') || description.includes('video game')) {
+                return `这是一个游戏开发项目，名为${name}。它可能用于创建电子游戏、游戏引擎或游戏工具。简单来说，就是让你能够玩的电子游戏。`;
+            } else if (description.includes('database') || description.includes('SQL') || description.includes('data storage')) {
+                return `这是一个数据库项目，名为${name}。它可能用于存储、管理和查询数据。简单来说，就是一个可以存放大量信息的电子仓库。`;
+            } else if (description.includes('mobile') || description.includes('iOS') || description.includes('Android')) {
+                return `这是一个移动应用开发项目，名为${name}。它可能用于创建手机应用或平板应用。简单来说，就是你可以在手机上安装和使用的应用程序。`;
+            } else if (description.includes('CLI') || description.includes('command line') || description.includes('terminal')) {
+                return `这是一个命令行工具项目，名为${name}。它可能用于在终端中执行各种任务或操作。简单来说，就是你可以在电脑的命令提示符中使用的工具。`;
+            } else if (description.includes('library') || description.includes('framework') || description.includes('SDK')) {
+                return `这是一个软件开发库或框架项目，名为${name}。它可能用于帮助开发者更快速地创建其他软件项目。简单来说，就是开发者可以使用的工具箱。`;
+            } else if (description.includes('API') || description.includes('application programming interface')) {
+                return `这是一个API项目，名为${name}。它可能用于提供各种服务或功能的接口。简单来说，就是不同软件之间进行通信的桥梁。`;
+            } else if (description.includes('blockchain') || description.includes('cryptocurrency') || description.includes('NFT')) {
+                return `这是一个区块链或加密货币项目，名为${name}。它可能用于创建加密货币、NFT或其他区块链应用。简单来说，就是一种基于密码学的安全交易技术。`;
+            } else if (description.includes('automation') || description.includes('script') || description.includes('bot')) {
+                return `这是一个自动化工具项目，名为${name}。它可能用于自动执行各种任务或操作。简单来说，就是可以帮你自动完成重复性工作的工具。`;
+            } else if (description.includes('security') || description.includes('encryption') || description.includes('password')) {
+                return `这是一个安全工具项目，名为${name}。它可能用于保护数据安全、加密信息或生成密码。简单来说，就是可以帮你保护隐私和安全的工具。`;
+            } else if (description.includes('testing') || description.includes('test') || description.includes('unit test')) {
+                return `这是一个测试工具项目，名为${name}。它可能用于测试软件的功能和性能。简单来说，就是可以帮你检查软件是否存在问题的工具。`;
+            } else if (description.includes('devops') || description.includes('CI/CD') || description.includes('continuous integration')) {
+                return `这是一个DevOps工具项目，名为${name}。它可能用于自动化软件开发和部署流程。简单来说，就是可以帮开发者更快速地发布和更新软件的工具。`;
+            } else if (description.includes('cloud') || description.includes('AWS') || description.includes('Azure') || description.includes('Google Cloud')) {
+                return `这是一个云计算项目，名为${name}。它可能用于创建和管理云服务。简单来说，就是可以帮你在互联网上运行和管理应用程序的服务。`;
+            } else if (description.includes('IoT') || description.includes('Internet of Things') || description.includes('smart home')) {
+                return `这是一个物联网项目，名为${name}。它可能用于创建和管理智能设备。简单来说，就是可以帮你将各种设备连接到互联网的技术。`;
+            } else if (description.includes('data') || description.includes('analytics') || description.includes('visualization')) {
+                return `这是一个数据分析项目，名为${name}。它可能用于处理、分析和可视化数据。简单来说，就是可以帮你从大量数据中提取有用信息的工具。`;
+            } else if (description.includes('image') || description.includes('video') || description.includes('audio')) {
+                return `这是一个多媒体处理项目，名为${name}。它可能用于处理、编辑或生成图像、视频或音频。简单来说，就是可以帮你处理各种媒体文件的工具。`;
+            } else if (description.includes('text') || description.includes('natural language') || description.includes('NLP')) {
+                return `这是一个自然语言处理项目，名为${name}。它可能用于处理和分析文本数据。简单来说，就是可以帮你理解和处理人类语言的工具。`;
+            } else if (description.includes('robotics') || description.includes('robot') || description.includes('automation')) {
+                return `这是一个机器人技术项目，名为${name}。它可能用于创建和控制机器人。简单来说，就是可以帮你设计和控制机器人的技术。`;
+            } else if (description.includes('education') || description.includes('learning') || description.includes('tutorial')) {
+                return `这是一个教育项目，名为${name}。它可能用于提供教育资源或学习工具。简单来说，就是可以帮你学习新知识的工具。`;
+            } else if (description.includes('finance') || description.includes('money') || description.includes('trading')) {
+                return `这是一个金融项目，名为${name}。它可能用于处理金融数据或提供金融服务。简单来说，就是可以帮你管理财务或进行投资的工具。`;
+            } else if (description.includes('health') || description.includes('medical') || description.includes('biomedical')) {
+                return `这是一个医疗健康项目，名为${name}。它可能用于处理医疗数据或提供医疗服务。简单来说，就是可以帮你管理健康或进行医疗研究的工具。`;
+            } else if (description.includes('science') || description.includes('research') || description.includes('academic')) {
+                return `这是一个科学研究项目，名为${name}。它可能用于进行科学研究或提供研究工具。简单来说，就是可以帮你进行科学研究的工具。`;
+            } else if (description.includes('art') || description.includes('creative') || description.includes('design')) {
+                return `这是一个创意设计项目，名为${name}。它可能用于创建艺术作品或提供设计工具。简单来说，就是可以帮你发挥创意的工具。`;
+            } else {
+                // 根据编程语言提供更准确的解释
+                switch (language) {
+                    case 'Python':
+                        return `这是一个使用Python编写的开源项目，名为${name}。Python是一种简单易学的编程语言，常用于数据分析、人工智能和Web开发等领域。`;
+                    case 'JavaScript':
+                        return `这是一个使用JavaScript编写的开源项目，名为${name}。JavaScript是一种网页开发语言，常用于创建交互式网页和Web应用。`;
+                    case 'Java':
+                        return `这是一个使用Java编写的开源项目，名为${name}。Java是一种跨平台编程语言，常用于创建企业级应用和Android应用。`;
+                    case 'TypeScript':
+                        return `这是一个使用TypeScript编写的开源项目，名为${name}。TypeScript是JavaScript的超集，提供了更强的类型检查和更好的开发体验。`;
+                    case 'Go':
+                        return `这是一个使用Go编写的开源项目，名为${name}。Go是一种高性能编程语言，常用于创建服务器和分布式系统。`;
+                    case 'Rust':
+                        return `这是一个使用Rust编写的开源项目，名为${name}。Rust是一种安全且高性能的编程语言，常用于创建系统级软件和嵌入式系统。`;
+                    case 'C++':
+                        return `这是一个使用C++编写的开源项目，名为${name}。C++是一种高性能编程语言，常用于创建游戏、操作系统和高性能应用。`;
+                    case 'C#':
+                        return `这是一个使用C#编写的开源项目，名为${name}。C#是一种面向对象编程语言，常用于创建Windows应用和游戏。`;
+                    case 'PHP':
+                        return `这是一个使用PHP编写的开源项目，名为${name}。PHP是一种服务器端脚本语言，常用于创建动态网页和Web应用。`;
+                    case 'Ruby':
+                        return `这是一个使用Ruby编写的开源项目，名为${name}。Ruby是一种简洁优雅的编程语言，常用于创建Web应用和脚本工具。`;
+                    default:
+                        return `这是一个名为${name}的开源项目。它使用${language || '未知'}编程语言编写，已经获得了很多开发者的关注。你可以点击卡片查看更多详细信息。`;
+                }
+            }
+        }
+
+        timeRange.addEventListener('change', fetchRepos);
+        language.addEventListener('change', fetchRepos);
+        translateLanguage.addEventListener('change', fetchRepos);
+        document.getElementById('refreshBtn').addEventListener('click', fetchRepos);
+
+        // 初始加载
+        fetchRepos();
+    </script>
+</body>
+</html>
