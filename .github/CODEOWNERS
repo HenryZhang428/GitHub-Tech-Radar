@@ -1,0 +1,12 @@
+# This file outlines who owns which parts of the codebase.
+# Code owners are automatically requested for review when someone opens a pull request.
+
+# Global owner
+*       @HenryZhang428
+
+# Backend
+src/*.py        @HenryZhang428
+src/templates/  @HenryZhang428
+
+# Documentation
+*.md            @HenryZhang428
