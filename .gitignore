@@ -6,3 +6,4 @@ venv/
 data/cache.json
 service.log
 .app_support/
+marketing/
