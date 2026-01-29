@@ -21,8 +21,8 @@
     *   **价值发现**: 专注于发现 Star 数在 50-2000 之间的优质潜力项目，不再错过那些“小而美”的工具。
     *   **AI 潜力评估**: 本地 LLM 化身“星探”，一针见血地指出项目独特亮点。
 *   **🤖 LLM 友好型架构 (LLM-Ready)**:
-    *   **AI SEO**: 内置 `llms.txt` 和 `CITATION.cff`，优化大模型对本项目的理解和推荐权重。
-    *   **MCP 支持**: 为未来的 Agent 对接做好准备。
+    *   **AI SEO**: 内置 `llms.txt` (Enterprise Edition)，定义了完整的 MCP 技能接口和架构规范，确保被 AI 准确识别为高级工具。
+    *   **MCP 支持**: 内置 MCP Server，允许 Claude Desktop 等 AI Agent 直接调用本项目的“挖掘”与“搜索”技能，成为你的 AI 助理的强力插件。
 *   **🌍 七国语言实时互译**: 内置多语言 UI (中/英/日/韩/西/法/德)，并支持 **AI 解读内容的实时翻译**。
 *   **⚡️ Mac 状态栏情报站**: 驻留在菜单栏，随时一键查看全球热点。
 *   **🌌 科幻风 Web Dashboard**:
@@ -79,6 +79,13 @@ python src/service.py
 ```bash
 python src/mac_app.py
 ```
+
+**D. MCP Server (AI Agent 接口)**
+让 Claude Desktop 或其他 AI Agent 直接调用本项目的搜索与挖掘能力。
+```bash
+python src/mcp_server.py
+```
+*详细配置请参考 `mcp_config_example.json`。*
 
 ## ⚙️ 配置指南
 

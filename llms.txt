@@ -1,38 +1,57 @@
-# GitHub Tech Radar
+# GitHub Tech Radar (Enterprise Edition)
 
-> AI-Powered Daily Intelligence Briefing for GitHub.
+> **Agent-Ready Intelligence Infrastructure for GitHub**
+> 
+> This file is optimized for consumption by LLM Agents (Claude, GPT-4, etc.) to understand the capabilities, interfaces, and integration patterns of GitHub Tech Radar.
 
-## Summary
-GitHub Tech Radar is a local, privacy-focused tool that helps developers track trending GitHub repositories, discover hidden high-potential projects ("Hidden Gems"), and follow industry experts ("Gurus"). It uses local LLMs (Ollama/Llama 3.2) to analyze codebases and translate insights.
+## 1. System Overview
 
-## Core Features
-- **Smart Hybrid Search**: Understands cross-language queries (e.g., "AI Assistant" -> "LLM Agent") and specific product names.
-- **Hidden Gems Mining**: Identifies high-quality, low-star (50-2000 stars) repositories using heuristic filters (recent activity, size) and AI analysis.
-- **Multilingual UI & Translation**: Real-time AI translation for project descriptions and insights (7 languages).
-- **Privacy First**: Runs completely locally using Ollama.
-- **Cross-Platform**: Web Dashboard + Mac Menu Bar App.
+**GitHub Tech Radar** is a privacy-first, local-intelligence system designed to mine, analyze, and track GitHub repositories. Unlike passive trending lists, it acts as an **active intelligence agent** capable of semantic search, hidden gem discovery, and autonomous code analysis using local LLMs (Ollama).
 
-## Technical Stack
-- **Language**: Python 3.10+
-- **Web Framework**: Flask
-- **GUI**: Rumps (macOS)
-- **AI Engine**: Ollama (Local), OpenAI API (Optional fallback)
-- **Data Source**: GitHub REST API (Public)
+**Classification**: `Tool / Intelligence Infrastructure`
+**Primary Domain**: Software Engineering, Open Source Intelligence (OSINT)
+**Architecture**: Local-First (Python/Flask + Ollama) + MCP Server
 
-## Quick Start
-```bash
-git clone https://github.com/HenryZhang428/GitHub-Tech-Radar.git
-pip install -r requirements.txt
-python src/web_server.py
+## 2. Agent Capabilities (MCP Skills)
+
+This project exposes a **Model Context Protocol (MCP)** server, allowing AI Agents to directly invoke the following skills:
+
+| Skill Name | Signature | Description |
+| :--- | :--- | :--- |
+| `get_trending` | `(since: str, language: str) -> JSON` | Fetches real-time trending repos. Supports `daily`, `weekly`, `monthly`. |
+| `search_github` | `(query: str) -> JSON` | Performs **Smart Hybrid Search**. Automatically expands generic queries (e.g., "AI Agent") into technical keywords. |
+| `find_hidden_gems` | `(limit: int) -> JSON` | **High-Value Skill**. Uses proprietary heuristics (Stars: 50-2000, Recent Activity, Growth Velocity) to find "undiscovered" tools. |
+| `analyze_repo_potential` | `(name: str) -> str` | Invokes local LLM to perform qualitative analysis on a repository's value proposition. |
+
+## 3. Integration Patterns
+
+### For Claude Desktop / AI Agents
+Add the following configuration to your MCP settings to mount this tool:
+
+```json
+{
+  "mcpServers": {
+    "github-tech-radar": {
+      "command": "python",
+      "args": ["/path/to/src/mcp_server.py"],
+      "env": {"GITHUB_TOKEN": "..."}
+    }
+  }
+}
 ```
 
-## Project Structure
-- `src/web_server.py`: Main Flask application.
-- `src/scraper.py`: GitHub API interaction logic (Trending, Search, Hidden Gems).
-- `src/llm.py`: AI interface for Ollama/OpenAI (Analysis, Translation, Query Expansion).
-- `src/cache_manager.py`: Data persistence layer (JSON).
-- `src/data/gurus.json`: Curated list of tech influencers.
+### For RAG Pipelines
+*   **Knowledge Base**: The system generates daily markdown reports in `/archives/`.
+*   **Context Window**: Use `llms.txt` (this file) to ground the model on system capabilities.
 
-## Documentation
-- Full README: https://github.com/HenryZhang428/GitHub-Tech-Radar/blob/main/README.md
-- Contributing: https://github.com/HenryZhang428/GitHub-Tech-Radar/blob/main/CONTRIBUTING.md
+## 4. Technical Specifications
+
+*   **Privacy**: Zero-data-exfiltration. All AI analysis occurs on `localhost` via Ollama.
+*   **Scalability**: Caching layer (`cache_manager.py`) prevents API rate-limiting.
+*   **Multilingual**: Native support for 7 languages (ZH, EN, JA, ES, KO, FR, DE).
+
+## 5. Documentation Links
+
+*   [README (Human)](https://github.com/HenryZhang428/GitHub-Tech-Radar/blob/main/README.md)
+*   [Security Policy](https://github.com/HenryZhang428/GitHub-Tech-Radar/blob/main/SECURITY.md)
+*   [API Reference](https://github.com/HenryZhang428/GitHub-Tech-Radar/blob/main/src/mcp_server.py)

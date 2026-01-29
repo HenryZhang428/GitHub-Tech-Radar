@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "github-tech-radar": {
+      "command": "python",
+      "args": [
+        "/ABSOLUTE/PATH/TO/Github_daily_promption/src/mcp_server.py"
+      ],
+      "env": {
+        "GITHUB_TOKEN": "YOUR_GITHUB_TOKEN_HERE"
+      }
+    }
+  }
+}
