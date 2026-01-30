@@ -354,10 +354,28 @@
         </header>
 
         <!-- Discovery Section Toggle -->
-        <div style="text-align: center; margin-bottom: 30px;">
+        <div style="text-align: center; margin-bottom: 30px; display: flex; justify-content: center; gap: 20px;">
             <button id="toggle-guru-btn" class="follow-btn" onclick="toggleGuruSection()">
                 🚀 Discover / Manage Gurus
             </button>
+            <button id="settings-btn" class="follow-btn" style="border-color: #ff00ff; color: #ff00ff;" onclick="toggleSettings()">
+                🔑 API Settings
+            </button>
+        </div>
+
+        <!-- Settings Section -->
+        <div id="settings-section" style="display: none; max-width: 600px; margin: 0 auto 40px; background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 10px; border: 1px solid #ff00ff;">
+            <h3 style="color: #ff00ff; margin-bottom: 15px;">GitHub API Token</h3>
+            <p style="color: #ccc; font-size: 0.9rem; margin-bottom: 15px;">
+                Bind your GitHub Personal Access Token (PAT) to increase API rate limits and access private data.
+                <a href="https://github.com/settings/tokens" target="_blank" style="color: #00ffff;">Get Token Here</a>
+            </p>
+            <div style="display: flex; gap: 10px;">
+                <input type="password" id="github-token-input" placeholder="ghp_xxxxxxxxxxxx" 
+                       style="flex: 1; padding: 10px; border-radius: 5px; border: 1px solid #555; background: #222; color: white;">
+                <button onclick="saveToken()" style="background: #ff00ff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold;">Save</button>
+            </div>
+            <p id="token-status" style="margin-top: 10px; font-size: 0.8rem; color: #00ff88;"></p>
         </div>
 
         <!-- Search Bar -->
@@ -782,6 +800,61 @@
             } catch (error) {
                 console.error('Error:', error);
                 location.reload();
+            }
+        }
+
+        function toggleSettings() {
+            const section = document.getElementById('settings-section');
+            if (section.style.display === 'none') {
+                section.style.display = 'block';
+                checkTokenStatus();
+            } else {
+                section.style.display = 'none';
+            }
+        }
+
+        async function saveToken() {
+            const token = document.getElementById('github-token-input').value;
+            const statusEl = document.getElementById('token-status');
+            
+            statusEl.innerText = 'Saving...';
+            
+            try {
+                const response = await fetch('/api/settings/token', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ token: token })
+                });
+                
+                const data = await response.json();
+                if (data.status === 'success') {
+                    statusEl.innerText = '✅ Token saved successfully! Rate limits increased.';
+                    statusEl.style.color = '#00ff88';
+                } else {
+                    statusEl.innerText = '❌ Error: ' + data.message;
+                    statusEl.style.color = '#ff4444';
+                }
+            } catch (e) {
+                statusEl.innerText = '❌ Network Error';
+                statusEl.style.color = '#ff4444';
+            }
+        }
+
+        async function checkTokenStatus() {
+            try {
+                const response = await fetch('/api/settings/token');
+                const data = await response.json();
+                const statusEl = document.getElementById('token-status');
+                
+                if (data.has_token) {
+                    statusEl.innerText = `✅ Current Token: ${data.masked_token}`;
+                    document.getElementById('github-token-input').placeholder = "Enter new token to overwrite";
+                } else {
+                    statusEl.innerText = '⚠️ No token bound. Using public API limits.';
+                    statusEl.style.color = '#ffcc00';
+                }
+            } catch (e) {
+                console.error("Failed to check token status");
             }
         }
     </script>

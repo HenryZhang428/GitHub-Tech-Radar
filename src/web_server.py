@@ -179,6 +179,54 @@ def translate_text():
     translated_text = cache_manager.llm_analyzer.translate(text, target_lang_name)
     return jsonify({"translated_text": translated_text})
 
+@app.route('/api/settings/token', methods=['POST'])
+def save_token():
+    data = request.json
+    token = data.get('token')
+    
+    if not token:
+        # Clear token if empty string provided
+        token = ""
+        
+    env_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), '.env')
+    
+    try:
+        # Read existing lines
+        lines = []
+        if os.path.exists(env_path):
+            with open(env_path, 'r') as f:
+                lines = f.readlines()
+        
+        # Remove existing GITHUB_TOKEN line
+        lines = [line for line in lines if not line.startswith('GITHUB_TOKEN=')]
+        
+        # Append new token
+        if token:
+            if lines and not lines[-1].endswith('\n'):
+                lines.append('\n')
+            lines.append(f'GITHUB_TOKEN={token}\n')
+            
+        with open(env_path, 'w') as f:
+            f.writelines(lines)
+            
+        # Update current process env
+        if token:
+            os.environ['GITHUB_TOKEN'] = token
+        elif 'GITHUB_TOKEN' in os.environ:
+            del os.environ['GITHUB_TOKEN']
+            
+        return jsonify({"status": "success", "message": "Token saved successfully"})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route('/api/settings/token', methods=['GET'])
+def get_token_status():
+    token = os.getenv("GITHUB_TOKEN")
+    return jsonify({
+        "has_token": bool(token),
+        "masked_token": f"{token[:4]}...{token[-4:]}" if token and len(token) > 8 else None
+    })
+
 if __name__ == '__main__':
     print("Starting Web Server on http://localhost:5001")
     app.run(host='0.0.0.0', port=5001, debug=True)
