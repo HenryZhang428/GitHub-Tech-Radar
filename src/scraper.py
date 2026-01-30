@@ -5,6 +5,16 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+from dotenv import load_dotenv
+
+# Load env vars at module level, but also allow dynamic reload
+load_dotenv()
+
+def get_token():
+    # Force reload to pick up changes from .env
+    load_dotenv(override=True)
+    return os.getenv("GITHUB_TOKEN")
+
 def get_trending_repos(since='daily', language='', limit=10):
     """
     Fetch trending repositories from GitHub Search API.
@@ -40,7 +50,7 @@ def get_trending_repos(since='daily', language='', limit=10):
     }
     
     # Add token if available to increase rate limit
-    token = os.getenv("GITHUB_TOKEN")
+    token = get_token()
     if token:
         headers["Authorization"] = f"token {token}"
 
@@ -88,7 +98,7 @@ def search_repos(query, limit=10):
         "Accept": "application/vnd.github.v3+json"
     }
     
-    token = os.getenv("GITHUB_TOKEN")
+    token = get_token()
     if token:
         headers["Authorization"] = f"token {token}"
 

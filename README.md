@@ -4,9 +4,10 @@
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Python](https://img.shields.io/badge/python-3.10+-green.svg)
-![Platform](https://img.shields.io/badge/platform-macOS-lightgrey.svg)
+![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows-lightgrey.svg)
 ![AI](https://img.shields.io/badge/AI-Ollama%20Local-purple.svg)
 ![LLM Ready](https://img.shields.io/badge/LLM-Ready-black.svg)
+![Status](https://img.shields.io/badge/Status-SOTA-red.svg)
 
 ## 📖 项目介绍
 
@@ -25,6 +26,8 @@
     *   **MCP 支持**: 内置 MCP Server，允许 Claude Desktop 等 AI Agent 直接调用本项目的“挖掘”与“搜索”技能，成为你的 AI 助理的强力插件。
 *   **🌍 七国语言实时互译**: 内置多语言 UI (中/英/日/韩/西/法/德)，并支持 **AI 解读内容的实时翻译**。
 *   **⚡️ Mac 状态栏情报站**: 驻留在菜单栏，随时一键查看全球热点。
+*   **🪟 Windows 一键启动**: 提供 `run_windows.bat` 脚本，双击即可启动全套服务。
+*   **🔑 GitHub 账号绑定**: 在 Web 界面直接绑定 Personal Access Token，解锁更高 API 频率限制和私有数据访问权限。
 *   **🌌 科幻风 Web Dashboard**:
     *   **多维度热榜**: 支持 **Daily / Weekly / Monthly** 自由切换，精准把握短期热点与长期趋势。
     *   **Guru Discovery**: 内置行业大神推荐库（AI, 前端, 后端等），像刷微博一样一键关注技术大牛。
@@ -44,17 +47,17 @@ ollama pull llama3.2:3b
 ```
 
 ### 2. 安装项目
-
 ```bash
 git clone https://github.com/your-username/github-tech-radar.git
 cd github-tech-radar
 
-# 创建虚拟环境
+# macOS / Linux
 python3 -m venv venv
 source venv/bin/activate
-
-# 安装依赖
 pip install -r requirements.txt
+
+# Windows
+# 直接双击运行 run_windows.bat 即可自动完成环境配置和启动
 ```
 
 ### 3. 启动服务

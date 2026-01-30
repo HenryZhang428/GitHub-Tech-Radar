@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Allow: /llms.txt
+Allow: /CITATION.cff
+
+# SOTA Compliance
+Sitemap: https://github.com/HenryZhang428/GitHub-Tech-Radar/blob/main/llms.txt
