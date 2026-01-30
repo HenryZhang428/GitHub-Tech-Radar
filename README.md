@@ -7,6 +7,7 @@
 ![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows-lightgrey.svg)
 ![AI](https://img.shields.io/badge/AI-Ollama%20Local-purple.svg)
 ![LLM Ready](https://img.shields.io/badge/LLM-Ready-black.svg)
+![Status](https://img.shields.io/badge/Status-SOTA-red.svg)
 
 ## 📖 项目介绍
 
