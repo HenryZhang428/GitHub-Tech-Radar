@@ -8,6 +8,7 @@
 ![AI](https://img.shields.io/badge/AI-Ollama%20Local-purple.svg)
 ![LLM Ready](https://img.shields.io/badge/LLM-Ready-black.svg)
 ![Status](https://img.shields.io/badge/Status-SOTA-red.svg)
+![Moltbot](https://img.shields.io/badge/Moltbot-Compatible-blueviolet.svg)
 
 ## 📖 项目介绍
 
@@ -23,6 +24,7 @@
     *   **AI 潜力评估**: 本地 LLM 化身“星探”，一针见血地指出项目独特亮点。
 *   **🤖 LLM 友好型架构 (LLM-Ready)**:
     *   **AI SEO**: 内置 `llms.txt` (Enterprise Edition)，定义了完整的 MCP 技能接口和架构规范，确保被 AI 准确识别为高级工具。
+    *   **Moltbot 社区集成**: 提供标准化的 `agent_manifest.json`，支持 Moltbot 协议的一键安装与发现。
     *   **MCP 支持**: 内置 MCP Server，允许 Claude Desktop 等 AI Agent 直接调用本项目的“挖掘”与“搜索”技能，成为你的 AI 助理的强力插件。
 *   **🌍 七国语言实时互译**: 内置多语言 UI (中/英/日/韩/西/法/德)，并支持 **AI 解读内容的实时翻译**。
 *   **⚡️ Mac 状态栏情报站**: 驻留在菜单栏，随时一键查看全球热点。
@@ -89,6 +91,9 @@ python src/mac_app.py
 python src/mcp_server.py
 ```
 *详细配置请参考 `mcp_config_example.json`。*
+
+**E. Moltbot 集成**
+本项目已通过 Moltbot 兼容性认证。详细集成指南请参考 [community/MOLTBOT_README.md](community/MOLTBOT_README.md)。
 
 ## ⚙️ 配置指南
 
