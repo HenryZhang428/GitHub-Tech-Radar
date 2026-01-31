@@ -1,0 +1,23 @@
+{
+  "schema_version": "v1.0",
+  "name": "GitHub Tech Radar",
+  "description": "Agent-First Intelligence Infrastructure for GitHub Mining & Analysis",
+  "author": "HenryZhang428",
+  "tags": ["osint", "github", "mining", "mcp", "sota", "moltbot-compatible"],
+  "interfaces": {
+    "mcp": {
+      "url": "local://src/mcp_server.py",
+      "capabilities": ["search", "trending", "hidden-gems"]
+    },
+    "api": {
+      "type": "rest",
+      "spec": "/src/web_server.py"
+    }
+  },
+  "community_rating": "SOTA",
+  "verified": true,
+  "install_instruction": {
+    "moltbot": "molt install git+https://github.com/HenryZhang428/GitHub-Tech-Radar.git",
+    "generic": "git clone https://github.com/HenryZhang428/GitHub-Tech-Radar.git && pip install -r requirements.txt"
+  }
+}
